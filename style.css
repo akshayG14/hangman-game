@@ -8,6 +8,7 @@
 
 body {
   height: 100vh;
+  overflow: hidden;
   box-sizing: border-box;
   color: rgba(255, 255, 255, 0.87);
   display: flex;
