@@ -9,12 +9,12 @@ const figureParts = document.querySelectorAll('.figure-part');
 
 let selectedWord = '';
 
-(function () {
+function getRandomWord() {
   try {
     const tempWordList = ['javascript', 'application', 'design'];
     selectedWord = tempWordList[Math.floor(Math.random() * tempWordList.length)];
   } catch (e) { console.log('Error while getting random word: ', e); }
-})();
+}
 
 let correctLetters = [];
 let wrongLetters = [];
@@ -47,7 +47,29 @@ function showNotification() {
 }
 
 // Update the wrong letters
-function updateWrongLettersElement() { }
+function updateWrongLettersElement() {
+  // display worng letters
+  wrongLettersElement.innerHTML = `
+  ${wrongLetters.length > 0 ? '<p>Wrong</p>' : ''}
+  ${wrongLetters.map(letter => `<span>${letter}</span>`)}
+  `;
+
+  // display parts
+  figureParts.forEach((part, index) => {
+    const errors = wrongLetters.length;
+    if (index < errors) {
+      part.style.display = 'block';
+    } else {
+      part.style.display = 'none';
+    }
+  });
+
+  // check if last
+  if (wrongLetters.length === figureParts.length) {
+    finalMessage.innerText = 'Unfortunately you lost. 😞';
+    popup.style.display = 'flex';
+  }
+}
 
 // Keydown letter press
 window.addEventListener('keydown', event => {
@@ -71,4 +93,18 @@ window.addEventListener('keydown', event => {
   }
 });
 
+// Restart the game
+playAgainButton.addEventListener('click', () => {
+  // Empty the arrays
+  correctLetters.splice(0);
+  wrongLetters.splice(0);
+
+  getRandomWord();
+  displayWord();
+
+  updateWrongLettersElement();
+  popup.style.display = 'none';
+});
+
+getRandomWord();
 displayWord();
